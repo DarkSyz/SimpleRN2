@@ -36,6 +36,7 @@ const MainScreenNavigator = TabNavigator({
         Chat: { screen: ChatScreen },
         Settings: { screen: SettingsScreen },
     }, {
+        tabBarPosition: 'bottom',
         tabBarOptions: {
             showIcon: true,
             upperCaseLabel: false,

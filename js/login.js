@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
         marginTop: 12,
         marginBottom: 12,
         padding: 10,
-        backgroundColor: '#0000CC',
+        backgroundColor: '#108ee9',
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -67,7 +67,7 @@ export default class LoginScreen extends Component {
                         <TextInput style={styles.textInput} placeholder={'Password'}
                             password clearButtonMode={'always'} />
                     </View>
-                    <TouchableHighlight underlayColor={'darkblue'} style={styles.loginButton}
+                    <TouchableHighlight underlayColor={'#49a9ee'} style={styles.loginButton}
                         onPress={
                             () => {
                                 store.setUsername(this.state.username);
