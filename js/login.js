@@ -34,14 +34,13 @@ const styles = StyleSheet.create({
         flex: 1,
         width: null,
         height: null,
-        justifyContent: 'flex-end',
-        resizeMode: 'contain'
+        resizeMode: 'stretch'
     },
 });
 
 export default class LoginScreen extends Component {
     static navigationOptions = ({ navigation }) => ({
-        header: null,
+        header: null
     });
     constructor(props) {
         super(props);
@@ -96,7 +95,7 @@ export default class LoginScreen extends Component {
                     </Text>
                     </View>
                 </View>
-                <View style={{ flex: 1, padding: 5, flexDirection: 'row', alignItems: 'flex-end' }}>
+                <View style={{ flex: 1, padding: 4, flexDirection: 'row', alignItems: 'flex-end' }}>
                     <Image source={require('../images/perkinelmer_logo.png')}
                         style={{ width: 100, height: 50, resizeMode: 'contain' }} />
                 </View>

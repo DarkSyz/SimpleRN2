@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "_comment": "update node_modules/react-native/scripts/react-native-xcode.sh to configure sourcemap",
+    "build-ios": "cd ./ios && xcodebuild -scheme SimpleRN2",
+    "bundle-ios": "react-native bundle --entry-file ./index.ios.js --platform ios --dev false --bundle-output ./bundle/main.jsbundle --sourcemap-output ./bundle/sourcemap.js --assets-dest ./bundle",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest"
   },
