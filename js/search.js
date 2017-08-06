@@ -17,11 +17,17 @@ class SearchScreenHeader extends Component {
         );
     }
 }
+
 export default class SearchScreen extends Component {
     static navigationOptions = ({ navigation }) => ({
-        header: <SearchScreenHeader navigation={navigation} />,
+        header: null,
     });
     render() {
-        return <Text>Search</Text>;
+        return (
+        <View>
+            <SearchScreenHeader navigation={this.props.navigation} />
+            <Text>Search</Text>
+        </View>
+        );
     }
-}
+};
