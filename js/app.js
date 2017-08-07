@@ -15,6 +15,7 @@ import {
 import LoginScreen from './login';
 import FavoritesScreen from './favorites';
 import SearchScreen from './search';
+import ChatScreen from './chat';
 import SettingsScreen from './settings';
 import store from './store';
 
@@ -27,8 +28,6 @@ if ( __DEV__ === false ){
 
 const FollowedScreen = (props) =>
     <Text>Followed</Text>;
-const ChatScreen = (props) =>
-    <Text>Chat</Text>;
 
 const MainScreenNavigator = TabNavigator({
         Favorites: { screen: FavoritesScreen },
