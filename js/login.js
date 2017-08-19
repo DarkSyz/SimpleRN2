@@ -72,8 +72,9 @@ export default class LoginScreen extends Component {
                             () => {
                                 store.setUsername(this.state.username);
                                 this.props.navigation.dispatch(NavigationActions.reset({
-                                    index: 0,
+                                    index: 1,
                                     actions: [
+                                        NavigationActions.navigate({ routeName: 'Entries' }),
                                         NavigationActions.navigate({ routeName: 'Main' })
                                     ]
                                 }));
