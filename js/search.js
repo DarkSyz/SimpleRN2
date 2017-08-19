@@ -22,10 +22,11 @@ class SearchScreenHeader extends Component {
 export default class SearchScreen extends Component {
     static navigationOptions = ({ navigation }) => ({
         header: null,
+        tabBarVisible: false
     });
     render() {
         return (
-        <View>
+        <View style={{marginTop: 22}}>
             <SearchScreenHeader navigation={this.props.navigation} />
             <Text>Search, username is {store.getUsername()}</Text>
         </View>

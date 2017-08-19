@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import {
     Text,
     View,
-    Button,
-    TextInput,
-    Image
+    Button
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 
