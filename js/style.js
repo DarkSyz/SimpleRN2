@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native';
 
 export default style = StyleSheet.create({
     label: {
-        marginTop: 16,
         marginLeft: 16
     },
 
@@ -54,5 +53,10 @@ export default style = StyleSheet.create({
         margin: 8, 
         width: 12, 
         height: 12 
+    },
+
+    tip: {
+        fontSize: 10,
+        margin: 16,
     }
 });

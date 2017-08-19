@@ -22,7 +22,7 @@ export default class ChooserScreen extends Component {
             items: []
         }
     }
-    componentWillMount() {
+    componentDidMount() {
         this.props.navigation.setParams({onDonePress: this.onDonePress});
         this.props.navigation.state.params.fetch().then((items) => {
             this.fullItems = items;

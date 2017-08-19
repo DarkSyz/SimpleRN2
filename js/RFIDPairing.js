@@ -20,9 +20,9 @@ class RFIDTagInput extends Component {
             RFIDTag: props.RFIDTag
         }
     }
-    componentWillReceiveProps(props) {
+    componentWillReceiveProps(nextProps) {
         this.setState({
-            RFIDTag: props.RFIDTag
+            RFIDTag: nextProps.RFIDTag
         })
     }
     onChangeText = (value) => {
@@ -32,24 +32,43 @@ class RFIDTagInput extends Component {
     }
     render() {
         return (
-            <View style={[style.card, style.textInputWithIcon]}>
-                <TextInput style={style.textInput} placeholder='RFID Tag'
-                    value={this.state.RFIDTag} onChangeText={this.onChangeText}
-                ></TextInput>
-                <TouchableHighlight underlayColor='lightgray'
-                    onPress={() => Alert.alert('Camera Scanning')}>
-                    <Image style={style.icon} source={require('../images/icons8-Camera-40.png')} />
-                </TouchableHighlight>
+            <View>
+                <Text style={style.tip}>Please pull RDIF reader to scan the tag or tap Camera to scan the barcode</Text>
+                <Text style={style.label}>RFID Tag</Text>
+                <View style={[style.card, style.textInputWithIcon]}>
+                    <TextInput style={style.textInput} placeholder='RFID Tag'
+                        value={this.state.RFIDTag} onChangeText={this.onChangeText}
+                    ></TextInput>
+                    <TouchableHighlight underlayColor='lightgray'
+                        onPress={() => Alert.alert('Camera Scanning')}>
+                        <Image style={style.icon} source={require('../images/icons8-Camera-40.png')} />
+                    </TouchableHighlight>
+                </View>
+                
             </View>
         );
     }
 }
 
-const ListItem = (props) =>
+const Attribute = (props) =>
     <View style={style.cardRow}>
         <Text>{props.label}</Text>
         <Text>{props.value}</Text>
-    </View>
+    </View>;
+
+const Attributes = (props)=>
+    <View>
+        <Text style={style.label}>OS Attributes</Text>
+        <View style={style.card}>
+            <Attribute label='OS Tag' value={props.OSTag} />
+            <Attribute label='Site' value={props.site} />
+            <Attribute label='Department' value={props.department} />
+            <Attribute label='Building' value={props.building} />
+            <Attribute label='Floor' value={props.floor} />
+            <Attribute label='Room' value={props.room} />
+        </View>
+    </View>;
+
 
 export default class PairingScreen extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -78,13 +97,21 @@ export default class PairingScreen extends Component {
             }, 2000);
         })
     }
+    checkRFIDReader = ()=>{
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                reject({ code: -1, message: 'Not Found'});
+            }, 500);
+        })        
+    }
     constructor(props) {
         super(props);
         this.state = {
-            loading: true
+            loading: true,
+            data: {}
         }
     }
-    componentWillMount() {
+    componentDidMount() {
         this.props.navigation.setParams({ loading: true });
         this.mockFetch('').then((data) => {
             this.props.navigation.setParams({ loading: false });
@@ -92,28 +119,21 @@ export default class PairingScreen extends Component {
                 loading: false,
                 data: data
             }))
-        })
+        });
+        this.checkRFIDReader().catch(err=>{
+            Alert.alert('RFID Reader is unavailable, please ensure it has been connected.');
+        });
     }
     render() {
         if (this.state.loading) {
             return <ActivityIndicator style={{ flex: 1 }} />
         }
-        else {
-            let data = this.state.data;
+        else    
+        {
             return (
                 <View>
-                    <Text style={style.label}>RFID Tag</Text>
-                    <RFIDTagInput RFIDTag={data.RFIDTag} />
-
-                    <Text style={style.label}>OS Attributes</Text>
-                    <View style={style.card}>
-                        <ListItem label='OS Tag' value={data.OSTag} />
-                        <ListItem label='Site' value={data.site} />
-                        <ListItem label='Department' value={data.department} />
-                        <ListItem label='Building' value={data.building} />
-                        <ListItem label='Floor' value={data.floor} />
-                        <ListItem label='Room' value={data.room} />
-                    </View>
+                    <RFIDTagInput RFIDTag={this.state.data.RFIDTag} />
+                    <Attributes {...this.state.data} />
                 </View>);
         }
     }
