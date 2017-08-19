@@ -23,15 +23,6 @@ const ListItem = (props) =>
         </View>
     </TouchableHighlight>
 
-const List = (props) =>
-    <View style={style.card}>
-        {
-            props.items.map((item, index) =>
-                <ListItem key={item.key} {...item} />
-            )
-        }
-    </View>
-
 const CircleButton = (props) =>
     <TouchableHighlight style={style.circleButton} underlayColor='#49a9ee'
         onPress={() => props.onPress()}>
@@ -47,35 +38,67 @@ export default class RFIDScanScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: [
-                {
-                    key: 'site', label: 'Site', value: 'Demo1',
-                    onPress: () => props.navigation.navigate('Chooser',
-                        {
-                            title: 'Sites',
-                            callback: v => this.updateValue('site', v)
-                        })
-                },
-                { key: 'dept', label: 'Department', value: '' },
-                { key: 'building', label: 'Building', value: '' },
-                { key: 'floor', label: 'Floor', value: ' ' },
-                { key: 'room', label: 'Room', value: '' },
-            ]
+            site: {},
+            department: {},
+            building: {},
+            floor: {},
+            room: {},
         }
     }
-    updateValue(key, v){
-        this.state.items.forEach(item=>{
-            if ( item.key === key ){
-                item.value = v;
-            }
-        });
-        this.setState();
+    mockFetchSites = () => {
+        let data = [
+            { id: '1', name: 'BOSTON' },
+            { id: '2', name: 'DEMO1' },
+            { id: '3', name: 'DEMO2' },
+        ];
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(data)
+            }, 1000);
+        })
     }
+    selectSite(curr) {
+        this.props.navigation.navigate('Chooser',
+            {
+                title: 'Sites',
+                showDone: false,
+                fetch: this.mockFetchSites,
+                callback: v => this.setState({ site: v })
+            })
+    }
+    mockFetchBuilding = () => {
+        let data = [ 'B1', 'B2', 'B3', 'B4' ];
+        data = data.map((e)=>({
+            id: e, name: e
+        }));
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(data)
+            }, 1000);
+        })
+    }
+    selectBuilding(curr) {
+        this.props.navigation.navigate('Chooser',
+            {
+                title: 'Buildings',
+                showDone: true,
+                fetch: this.mockFetchBuilding,
+                callback: v => this.setState({ building: v })
+            })
+    }        
     render() {
         return (
             <View>
                 <Text style={style.label}>Environment</Text>
-                <List items={this.state.items}/>
+                <View style={style.card}>
+                    <ListItem label='Site' value={this.state.site.name} 
+                        onPress={() => this.selectSite(this.state.site)} />
+                    <ListItem label='Department' value={this.state.department.name} />
+                    <ListItem label='Building' value={this.state.building.name} 
+                        onPress={() => this.selectBuilding(this.state.building)} />
+                    <ListItem label='Floor' value={this.state.floor.name} />
+                    <ListItem label='Room' value={this.state.room.name} />
+                </View>
 
                 <View style={style.circleButtonContainer}>
                     <CircleButton title='Start' onPress={() => Alert.alert('Start')} />

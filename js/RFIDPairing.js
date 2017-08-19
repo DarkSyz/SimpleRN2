@@ -36,8 +36,10 @@ class RFIDTagInput extends Component {
                 <TextInput style={style.textInput} placeholder='RFID Tag'
                     value={this.state.RFIDTag} onChangeText={this.onChangeText}
                 ></TextInput>
-                <Image style={style.icon}
-                    source={require('../images/icons8-Camera-40.png')} />
+                <TouchableHighlight underlayColor='lightgray'
+                    onPress={() => Alert.alert('Camera Scanning')}>
+                    <Image style={style.icon} source={require('../images/icons8-Camera-40.png')} />
+                </TouchableHighlight>
             </View>
         );
     }
@@ -47,15 +49,6 @@ const ListItem = (props) =>
     <View style={style.cardRow}>
         <Text>{props.label}</Text>
         <Text>{props.value}</Text>
-    </View>
-
-const List = (props) =>
-    <View style={style.card}>
-        {
-            props.items.map((item, index) =>
-                <ListItem key={item.key} {...item} />
-            )
-        }
     </View>
 
 export default class PairingScreen extends Component {
@@ -70,6 +63,7 @@ export default class PairingScreen extends Component {
 
     mockFetch = (instrumentId) => {
         let data = {
+            instrumentId: '1',
             RFIDTag: '00400',
             OSTag: '99960564',
             site: 'DEMO1',
@@ -83,7 +77,6 @@ export default class PairingScreen extends Component {
                 resolve(data)
             }, 2000);
         })
-
     }
     constructor(props) {
         super(props);
@@ -92,41 +85,36 @@ export default class PairingScreen extends Component {
         }
     }
     componentWillMount() {
+        this.props.navigation.setParams({ loading: true });
         this.mockFetch('').then((data) => {
             this.props.navigation.setParams({ loading: false });
             this.setState((prevState, props) => ({
                 loading: false,
-                RFIDTag: data.RFIDTag,
-                items:
-                [
-                    { key: 'OSTag', label: 'OS Tag', value: data.OSTag },
-                    { key: 'site', label: 'Site', value: data.site },
-                    { key: 'dept', label: 'Department', value: data.department },
-                    { key: 'building', label: 'Building', value: data.building },
-                    { key: 'floor', label: 'Floor', value: data.floor },
-                    { key: 'room', label: 'Room', value: data.room },
-                ]
+                data: data
             }))
         })
-    }
-    componentDidMount() {
-        this.props.navigation.setParams({
-            loading: this.state.loading
-        });
     }
     render() {
         if (this.state.loading) {
             return <ActivityIndicator style={{ flex: 1 }} />
         }
         else {
+            let data = this.state.data;
             return (
-            <View>
-                <Text style={style.label}>RFID Tag</Text>
-                <RFIDTagInput RFIDTag={this.state.RFIDTag} />
+                <View>
+                    <Text style={style.label}>RFID Tag</Text>
+                    <RFIDTagInput RFIDTag={data.RFIDTag} />
 
-                <Text style={style.label}>OS Attributes</Text>
-                <List items={this.state.items} />
-            </View>);
+                    <Text style={style.label}>OS Attributes</Text>
+                    <View style={style.card}>
+                        <ListItem label='OS Tag' value={data.OSTag} />
+                        <ListItem label='Site' value={data.site} />
+                        <ListItem label='Department' value={data.department} />
+                        <ListItem label='Building' value={data.building} />
+                        <ListItem label='Floor' value={data.floor} />
+                        <ListItem label='Room' value={data.room} />
+                    </View>
+                </View>);
         }
     }
 }

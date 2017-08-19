@@ -1,53 +1,81 @@
 import React, { Component } from 'react';
-import { Text, Alert, TouchableHighlight, TextInput, View, FlatList } from 'react-native';
+import { Button, Text, TouchableHighlight, ActivityIndicator, TextInput, View, FlatList } from 'react-native';
 import style from './style';
 
 export default class ChooserScreen extends Component {
 
-    static navigationOptions = ({ navigation }) => ({
-        title: navigation.state.params.title
-    });
+    static navigationOptions = (props) => {
+        let params = props.navigation.state.params;
+        return {
+        title: params.title,
+        headerRight: params.showDone ? 
+            <Button title='Done' onPress={() => params.onDonePress()} />        
+            : null
+        }
+    };
 
     constructor(props) {
         super(props);
-        this.sites = [
-            { key: 'BOSTON' },
-            { key: 'DEMO1' },
-            { key: 'DEMO2' },
-            { key: 'DEMO3' },
-            { key: 'DEMO4' },
-            { key: 'DEMO5' },
-            { key: 'DEMO6' },
-            { key: 'DEMO7' },
-        ];
+        this.fullItems = [];
         this.state = {
-            dataSource: this.sites
-        };
+            loading: true,
+            items: []
+        }
+    }
+    componentWillMount() {
+        this.props.navigation.setParams({onDonePress: this.onDonePress});
+        this.props.navigation.state.params.fetch().then((items) => {
+            this.fullItems = items;
+            this.setState({
+                loading: false,
+                search: '',
+                items: items
+            })
+        })
     }
     onChangeText(v) {
-        let s = v === '' ? this.sites : this.sites.filter((e) => {
-            return e.key.toUpperCase().indexOf(v.toUpperCase()) !== -1;
+        let items = v === '' ? this.fullItems : this.fullItems.filter((item) => {
+            return item.name.toUpperCase().indexOf(v.toUpperCase()) !== -1;
         })
-        this.setState({
-            dataSource: s,
+        this.setState({ 
+            search: v,
+            items: items 
         });
     }
+    onDonePress = ()=>{
+        let item = {id:'-1', name:this.state.search}
+        let nav = this.props.navigation;
+        nav.state.params.callback(item);
+        nav.goBack();        
+    }
+    onItemPress = (item)=>{
+        let nav = this.props.navigation;
+        nav.state.params.callback(item);
+        nav.goBack();
+    }
     render() {
-        return (
-            <View style={{ flex: 1 }}>
-                <TextInput placeholder='Search'
-                    onChangeText={(v) => this.onChangeText(v)}
-                    style={{ padding: 8, backgroundColor: 'white' }} />
-                <FlatList style={{ flex: 1, marginTop: 8 }}
-                    data={this.state.dataSource}
-                    renderItem={e => {
-                        return <View key={e.item.key} flexDirection='row' alignItems='center' style={{ height: 32, margin: 4 }}>
-                            <Text>{e.item.key}</Text>
-                        </View>
-                    }
-                    }
-                />
-            </View>
-        );
+        if (this.state.loading) {
+            return <ActivityIndicator style={{ flex: 1 }} />
+        }
+        else {
+            return (
+                <View style={{ flex: 1 }}>
+                    <TextInput placeholder='Search' keyboardType='web-search'
+                        onChangeText={(v) => this.onChangeText(v)} value={this.state.search}
+                        style={{ padding: 8, backgroundColor: 'white' }} />
+                    <FlatList style={{ flex: 1}}
+                        data={this.state.items}
+                        renderItem={e =>
+                            <TouchableHighlight underlayColor='lightgray' style={{ justifyContent: 'center', height: 32, margin: 4 }}
+                                onPress={()=>this.onItemPress(e.item)}>
+                                <Text>{e.item.name}</Text>
+                            </TouchableHighlight>
+                        }
+                        ItemSeparatorComponent={()=><View style={{borderColor:'lightgray', borderWidth: 1}}></View>}
+                        keyExtractor={(item, index)=>index }
+                    />
+                </View>
+            );
+        }
     }
 }
