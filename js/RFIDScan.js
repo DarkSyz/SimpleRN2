@@ -16,7 +16,7 @@ const ListItem = (props) =>
     <TouchableHighlight underlayColor='lightgray' onPress={props.onPress}>
         <View style={style.cardRow}>
             <Text>{props.label}</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text>{props.value}</Text>
                 <Image style={style.smallIcon} source={require('../images/icons8-Forward-48.png')} />
             </View>
@@ -33,10 +33,10 @@ const List = (props) =>
     </View>
 
 const CircleButton = (props) =>
-        <TouchableHighlight style={style.circleButton} underlayColor='#49a9ee'
-            onPress={()=>props.onPress()}>
-            <Text style={{ alignSelf: 'center' }}>{props.title}</Text>
-        </TouchableHighlight>
+    <TouchableHighlight style={style.circleButton} underlayColor='#49a9ee'
+        onPress={() => props.onPress()}>
+        <Text style={{ alignSelf: 'center' }}>{props.title}</Text>
+    </TouchableHighlight>
 
 export default class RFIDScanScreen extends Component {
     static navigationOptions = ({ navigation }) => ({
@@ -48,7 +48,14 @@ export default class RFIDScanScreen extends Component {
         super(props);
         this.state = {
             items: [
-                { key: 'site', label: 'Site', value: 'Demo1', onPress:()=>props.navigation.navigate('Chooser', {title:'Sites'}) },
+                {
+                    key: 'site', label: 'Site', value: 'Demo1',
+                    onPress: () => props.navigation.navigate('Chooser',
+                        {
+                            title: 'Sites',
+                            callback: v => this.updateValue('site', v)
+                        })
+                },
                 { key: 'dept', label: 'Department', value: '' },
                 { key: 'building', label: 'Building', value: '' },
                 { key: 'floor', label: 'Floor', value: ' ' },
@@ -56,14 +63,22 @@ export default class RFIDScanScreen extends Component {
             ]
         }
     }
+    updateValue(key, v){
+        this.state.items.forEach(item=>{
+            if ( item.key === key ){
+                item.value = v;
+            }
+        });
+        this.setState();
+    }
     render() {
         return (
             <View>
                 <Text style={style.label}>Environment</Text>
-                <List items={this.state.items} />
+                <List items={this.state.items}/>
 
                 <View style={style.circleButtonContainer}>
-                    <CircleButton title='Start' onPress={() => Alert.alert('Start')}/>
+                    <CircleButton title='Start' onPress={() => Alert.alert('Start')} />
                 </View>
             </View>);
     }
