@@ -1,17 +1,25 @@
 import { StyleSheet } from 'react-native';
 
 export default style = StyleSheet.create({
-    label: {
-        marginLeft: 16
-    },
-
     card: {
         margin: 8,
-        padding: 8,
-        borderWidth: 1,
-        borderRadius: 5,
-        borderColor: 'lightgray'
     },
+    cardLabel: {
+        marginLeft: 8
+    },  
+    cardContent: {      
+        borderWidth: 1,
+        borderRadius: 4,
+        borderColor: 'lightgray',
+        paddingLeft: 8,   
+        paddingRight: 8,          
+    },  
+    cardRow: {
+        height: 40,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },    
 
     textInputWithIcon: {
         flexDirection: 'row',
@@ -19,22 +27,11 @@ export default style = StyleSheet.create({
     },
     textInput: {
         flex: 1,
-        paddingLeft: 8,
-        paddingRight: 8,
         backgroundColor: 'white',
-        borderRadius: 5,
     },
-    icon: {
-        marginLeft: 8,
+    icon: {       
         width: 40,
         height: 40
-    },
-
-    cardRow: {
-        height: 40,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
     },
 
     circleButtonContainer: { 
@@ -49,6 +46,7 @@ export default style = StyleSheet.create({
         width: 96,
         height: 96,
     },
+
     smallIcon: { 
         margin: 8, 
         width: 12, 

@@ -3,7 +3,7 @@ import {
     StyleSheet,
     Text,
     View,
-    TouchableHighlight,
+    TouchableOpacity,
     Button,
     TextInput,
     Image,
@@ -11,9 +11,11 @@ import {
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import style from './style';
+import { CardComponent as Card } from './common';
+import Service from './services';
 
 const ListItem = (props) =>
-    <TouchableHighlight underlayColor='lightgray' onPress={props.onPress}>
+    <TouchableOpacity onPress={props.onPress}>
         <View style={style.cardRow}>
             <Text>{props.label}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -21,13 +23,13 @@ const ListItem = (props) =>
                 <Image style={style.smallIcon} source={require('../images/icons8-Forward-48.png')} />
             </View>
         </View>
-    </TouchableHighlight>
+    </TouchableOpacity>
 
 const CircleButton = (props) =>
-    <TouchableHighlight style={style.circleButton} underlayColor='#49a9ee'
+    <TouchableOpacity style={style.circleButton} underlayColor='#49a9ee'
         onPress={() => props.onPress()}>
         <Text style={{ alignSelf: 'center' }}>{props.title}</Text>
-    </TouchableHighlight>
+    </TouchableOpacity>
 
 export default class RFIDScanScreen extends Component {
     static navigationOptions = ({ navigation }) => ({
@@ -45,63 +47,76 @@ export default class RFIDScanScreen extends Component {
             room: {},
         }
     }
-    mockFetchSites = () => {
-        let data = [
-            { id: '1', name: 'BOSTON' },
-            { id: '2', name: 'DEMO1' },
-            { id: '3', name: 'DEMO2' },
-        ];
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(data)
-            }, 1000);
-        })
-    }
     selectSite(curr) {
         this.props.navigation.navigate('Chooser',
             {
                 title: 'Sites',
                 showDone: false,
-                fetch: this.mockFetchSites,
+                fetch: Service.fetchSites,
                 callback: v => this.setState({ site: v })
             })
     }
-    mockFetchBuilding = () => {
-        let data = [ 'B1', 'B2', 'B3', 'B4' ];
-        data = data.map((e)=>({
-            id: e, name: e
-        }));
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(data)
-            }, 1000);
-        })
+    selectDepartment(curr) {
+        this.props.navigation.navigate('Chooser',
+            {
+                title: 'Departments',
+                showDone: false,
+                fetch: Service.fetchDepartments,
+                callback: v => this.setState({ department: v })
+            })
     }
     selectBuilding(curr) {
         this.props.navigation.navigate('Chooser',
             {
                 title: 'Buildings',
-                showDone: true,
-                fetch: this.mockFetchBuilding,
+                showDone: false,
+                fetch: Service.fetchBuildings,
                 callback: v => this.setState({ building: v })
             })
-    }        
+    }
+    selectFloor(curr) {
+        this.props.navigation.navigate('Chooser',
+            {
+                title: 'Floor',
+                showDone: false,
+                fetch: Service.fetchFloors,
+                callback: v => this.setState({ floor: v })
+            })
+    }
+    selectRoom(curr) {
+        this.props.navigation.navigate('Chooser',
+            {
+                title: 'Room',
+                showDone: false,
+                fetch: Service.fetchRooms,
+                callback: v => this.setState({ room: v })
+            })
+    }
+    start = () => {
+        // TODO check environment
+        Alert.alert('Start')
+    }
     render() {
         return (
             <View>
-                <Text style={style.label}>Environment</Text>
-                <View style={style.card}>
-                    <ListItem label='Site' value={this.state.site.name} 
+                <Text style={style.tip}>Please set the scanning environment and start re-inventory</Text>
+
+                <Card title='Environment'>
+                    <ListItem label='Site' value={this.state.site.name}
                         onPress={() => this.selectSite(this.state.site)} />
-                    <ListItem label='Department' value={this.state.department.name} />
-                    <ListItem label='Building' value={this.state.building.name} 
+                    <ListItem label='Department' value={this.state.department.name}
+                        onPress={() => this.selectDepartment(this.state.site)} />
+                    <ListItem label='Building' value={this.state.building.name}
                         onPress={() => this.selectBuilding(this.state.building)} />
-                    <ListItem label='Floor' value={this.state.floor.name} />
-                    <ListItem label='Room' value={this.state.room.name} />
-                </View>
+                    <ListItem label='Floor' value={this.state.floor.name}
+                        onPress={() => this.selectFloor(this.state.site)} />
+                    <ListItem label='Room' value={this.state.room.name}
+                        onPress={() => this.selectRoom(this.state.site)} />
+                </Card>
 
                 <View style={style.circleButtonContainer}>
-                    <CircleButton title='Start' onPress={() => Alert.alert('Start')} />
+                    <CircleButton title='Start'
+                        onPress={() => this.start()} />
                 </View>
             </View>);
     }

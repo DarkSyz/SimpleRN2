@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Button, Text, TouchableHighlight, ActivityIndicator, TextInput, View, FlatList } from 'react-native';
+import { Button, Text, TouchableOpacity, ActivityIndicator, TextInput, View, FlatList } from 'react-native';
 import style from './style';
 
 export default class ChooserScreen extends Component {
-
     static navigationOptions = (props) => {
         let params = props.navigation.state.params;
         return {
@@ -60,16 +59,16 @@ export default class ChooserScreen extends Component {
         else {
             return (
                 <View style={{ flex: 1 }}>
-                    <TextInput placeholder='Search' keyboardType='web-search'
+                    <TextInput placeholder='Search' keyboardType='web-search' underlineColorAndroid='transparent'
                         onChangeText={(v) => this.onChangeText(v)} value={this.state.search}
                         style={{ padding: 8, backgroundColor: 'white' }} />
                     <FlatList style={{ flex: 1}}
                         data={this.state.items}
                         renderItem={e =>
-                            <TouchableHighlight underlayColor='lightgray' style={{ justifyContent: 'center', height: 32, margin: 4 }}
+                            <TouchableOpacity style={{ justifyContent: 'center', height: 32, margin: 4 }}
                                 onPress={()=>this.onItemPress(e.item)}>
                                 <Text>{e.item.name}</Text>
-                            </TouchableHighlight>
+                            </TouchableOpacity>
                         }
                         ItemSeparatorComponent={()=><View style={{borderColor:'lightgray', borderWidth: 1}}></View>}
                         keyExtractor={(item, index)=>index }

@@ -3,7 +3,7 @@ import {
     StyleSheet,
     Text,
     View,
-    TouchableHighlight,
+    TouchableOpacity,
     Button,
     TextInput,
     Image,
@@ -12,6 +12,8 @@ import {
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import style from './style';
+import { CardComponent as Card } from './common';
+import Service from './services';
 
 class RFIDTagInput extends Component {
     constructor(props) {
@@ -32,20 +34,19 @@ class RFIDTagInput extends Component {
     }
     render() {
         return (
-            <View>
-                <Text style={style.tip}>Please pull RDIF reader to scan the tag or tap Camera to scan the barcode</Text>
-                <Text style={style.label}>RFID Tag</Text>
-                <View style={[style.card, style.textInputWithIcon]}>
-                    <TextInput style={style.textInput} placeholder='RFID Tag'
+            <Card title='RFID Tag' backgroundColor='white'>
+                <View style={style.textInputWithIcon}>
+                    <TextInput style={style.textInput} placeholder='RFID Tag' underlineColorAndroid='transparent'
                         value={this.state.RFIDTag} onChangeText={this.onChangeText}
                     ></TextInput>
-                    <TouchableHighlight underlayColor='lightgray'
+                    {
+                    <TouchableOpacity style={style.icon}
                         onPress={() => Alert.alert('Camera Scanning')}>
-                        <Image style={style.icon} source={require('../images/icons8-Camera-40.png')} />
-                    </TouchableHighlight>
+                        <Image source={require('../images/icons8-Camera-40.png')} />
+                    </TouchableOpacity>
+                    }
                 </View>
-                
-            </View>
+            </Card>
         );
     }
 }
@@ -56,17 +57,16 @@ const Attribute = (props) =>
         <Text>{props.value}</Text>
     </View>;
 
-const Attributes = (props)=>
+const Attributes = (props) =>
     <View>
-        <Text style={style.label}>OS Attributes</Text>
-        <View style={style.card}>
+        <Card title='OS Attributes'>
             <Attribute label='OS Tag' value={props.OSTag} />
             <Attribute label='Site' value={props.site} />
             <Attribute label='Department' value={props.department} />
             <Attribute label='Building' value={props.building} />
             <Attribute label='Floor' value={props.floor} />
             <Attribute label='Room' value={props.room} />
-        </View>
+        </Card>
     </View>;
 
 
@@ -79,59 +79,52 @@ export default class PairingScreen extends Component {
                 onPress={() => navigation.goBack()} />
         })
     };
-
-    mockFetch = (instrumentId) => {
-        let data = {
-            instrumentId: '1',
-            RFIDTag: '00400',
-            OSTag: '99960564',
-            site: 'DEMO1',
-            department: 'OS',
-            building: 'B2',
-            floor: '',
-            room: '501'
-        };
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(data)
-            }, 2000);
-        })
-    }
-    checkRFIDReader = ()=>{
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                reject({ code: -1, message: 'Not Found'});
-            }, 500);
-        })        
-    }
     constructor(props) {
         super(props);
         this.state = {
             loading: true,
+            RFIDStatus: 'checking',
             data: {}
         }
     }
     componentDidMount() {
         this.props.navigation.setParams({ loading: true });
-        this.mockFetch('').then((data) => {
+        Service.fetchInstrument('E0000001').then((data) => {
             this.props.navigation.setParams({ loading: false });
             this.setState((prevState, props) => ({
                 loading: false,
                 data: data
             }))
         });
-        this.checkRFIDReader().catch(err=>{
-            Alert.alert('RFID Reader is unavailable, please ensure it has been connected.');
-        });
+        Service.checkRFIDReader()
+            .then(()=>{
+                this.setState({RFIDStatus: 'ready'});
+            })
+            .catch(err => {
+                this.setState({RFIDStatus: 'error'});
+            });
     }
     render() {
         if (this.state.loading) {
             return <ActivityIndicator style={{ flex: 1 }} />
         }
-        else    
-        {
+        else {
+            let tip;
+            switch ( this.state.RFIDStatus ){
+            case 'checking':
+                tip = <Text style={style.tip}>Checking RFID reader...</Text>;              
+                break;
+            case 'ready':
+                tip = <Text style={style.tip}>Please pull RDIF reader to scan the tag or tap Camera to scan the tag</Text>;
+                break;
+            case 'error':
+                tip = <Text style={[style.tip, {color: 'red'}]}>RFID reader is not connected, please connect it at first. Or use Camera to scan instead.</Text>;
+                break;
+            }
             return (
                 <View>
+                    {tip}
+
                     <RFIDTagInput RFIDTag={this.state.data.RFIDTag} />
                     <Attributes {...this.state.data} />
                 </View>);
