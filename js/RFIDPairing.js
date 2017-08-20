@@ -5,14 +5,17 @@ import {
     View,
     TouchableOpacity,
     Button,
-    TextInput,
     Image,
     Alert,
     ActivityIndicator
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import style from './style';
-import { CardComponent as Card, AttributesComponent as Attributes } from './common';
+import { 
+    CardComponent as Card, 
+    AttributesComponent as Attributes, 
+    TextInputComponent 
+} from './common';
 import Service from './services';
 
 class RFIDTagInput extends Component {
@@ -35,9 +38,8 @@ class RFIDTagInput extends Component {
     render() {
         return (
             <View style={style.textInputWithIcon}>
-                <TextInput style={style.textInput} placeholder='RFID Tag' underlineColorAndroid='transparent'
-                    value={this.state.RFIDTag} onChangeText={this.onChangeText}>
-                </TextInput>
+                <TextInputComponent style={style.textInput} placeholder='RFID Tag'
+                    value={this.state.RFIDTag} onChangeText={this.onChangeText}/>
                 <TouchableOpacity style={style.icon} onPress={() => Alert.alert('Camera Scanning')}>
                     <Image source={require('../images/icons8-Camera-40.png')} />
                 </TouchableOpacity>

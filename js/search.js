@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Text, TextInput, Button, View } from 'react-native';
+import { Text, Button, View } from 'react-native';
 import store from './store';
+import { TextInputComponent } from './common';
+
 class SearchScreenHeader extends Component {
     render() {
         return (
@@ -10,7 +12,7 @@ class SearchScreenHeader extends Component {
                 justifyContent: 'space-between',
                 alignItems: 'center',
             }}>
-                <TextInput placeholder={'Search'} style={{ flex: 1, margin: 4 }} />
+                <TextInputComponent placeholder={'Search'} style={{ flex: 1, margin: 4 }} />
                 <Button title='Cancel' onPress={() => {
                     this.props.navigation.goBack();
                 }} />

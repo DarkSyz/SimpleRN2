@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
 import style from './style';
+
+export const TextInputComponent = (props)=>
+    <TextInput underlineColorAndroid='transparent' 
+        autoCapitalize='none' autoCorrect={false}
+        {...props}/>;
 
 export const CardComponent = (props) =>
     <View style={style.card}>
@@ -19,7 +24,7 @@ export const AttributeComponent = (props) =>
 export const AttributesComponent = (props) =>
     <View>
         {props.items.map((item, index) =>
-            <AttributeComponent key={index} label={item.label} value={item.value} />
+            <AttributeComponent key={index} {...item} />
         )}
     </View>;
 
@@ -37,6 +42,6 @@ export const ChangableAttributeComponent = (props) =>
 export const ChangableAttributesComponent = (props) =>
     <View>
         {props.items.map((item, index) =>
-            <ChangableAttributeComponent key={index} label={item.label} value={item.value} onPress={item.onPress} />
+            <ChangableAttributeComponent key={index} {...item} />
         )}
     </View>;

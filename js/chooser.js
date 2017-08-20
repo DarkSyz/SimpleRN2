@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Text, TouchableOpacity, ActivityIndicator, TextInput, View, FlatList } from 'react-native';
+import { Button, Text, TouchableOpacity, ActivityIndicator, View, FlatList } from 'react-native';
 import style from './style';
+import { TextInputComponent } from './common';
 
 export default class ChooserScreen extends Component {
     static navigationOptions = (props) => {
@@ -59,7 +60,7 @@ export default class ChooserScreen extends Component {
         else {
             return (
                 <View style={{ flex: 1 }}>
-                    <TextInput placeholder='Search' keyboardType='web-search' underlineColorAndroid='transparent'
+                    <TextInputComponent placeholder='Search' keyboardType='web-search'
                         onChangeText={(v) => this.onChangeText(v)} value={this.state.search}
                         style={{ padding: 8, backgroundColor: 'white' }} />
                     <FlatList style={{ flex: 1 }}

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Image, Text, TextInput, View, TouchableHighlight, Alert } from 'react-native';
+import { StyleSheet, Platform, Image, Text, View, TouchableHighlight, Alert } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import store from './store.js';
+import { TextInputComponent } from './common';
 
 const styles = StyleSheet.create({
     topContainer: {
@@ -60,11 +61,11 @@ export default class LoginScreen extends Component {
                 </View>
                 <View style={styles.topContainer}>
                     <View style={{ height: 80 }}>
-                        <TextInput style={styles.textInput} placeholder={'Email'}
+                        <TextInputComponent style={styles.textInput} placeholder={'Email'}
                             keyboardType='email-address' clearButtonMode={'always'}
                             onChangeText={(username) => this.setState({ username })}
                             value={this.state.username} />
-                        <TextInput style={styles.textInput} placeholder={'Password'}
+                        <TextInputComponent style={styles.textInput} placeholder={'Password'}
                             password clearButtonMode={'always'} />
                     </View>
                     <TouchableHighlight underlayColor={'#49a9ee'} style={styles.loginButton}
