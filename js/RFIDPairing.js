@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import style from './style';
-import { CardComponent as Card } from './common';
+import { CardComponent as Card, AttributesComponent as Attributes } from './common';
 import Service from './services';
 
 class RFIDTagInput extends Component {
@@ -34,41 +34,17 @@ class RFIDTagInput extends Component {
     }
     render() {
         return (
-            <Card title='RFID Tag' backgroundColor='white'>
-                <View style={style.textInputWithIcon}>
-                    <TextInput style={style.textInput} placeholder='RFID Tag' underlineColorAndroid='transparent'
-                        value={this.state.RFIDTag} onChangeText={this.onChangeText}
-                    ></TextInput>
-                    {
-                    <TouchableOpacity style={style.icon}
-                        onPress={() => Alert.alert('Camera Scanning')}>
-                        <Image source={require('../images/icons8-Camera-40.png')} />
-                    </TouchableOpacity>
-                    }
-                </View>
-            </Card>
+            <View style={style.textInputWithIcon}>
+                <TextInput style={style.textInput} placeholder='RFID Tag' underlineColorAndroid='transparent'
+                    value={this.state.RFIDTag} onChangeText={this.onChangeText}>
+                </TextInput>
+                <TouchableOpacity style={style.icon} onPress={() => Alert.alert('Camera Scanning')}>
+                    <Image source={require('../images/icons8-Camera-40.png')} />
+                </TouchableOpacity>
+            </View>
         );
     }
 }
-
-const Attribute = (props) =>
-    <View style={style.cardRow}>
-        <Text>{props.label}</Text>
-        <Text>{props.value}</Text>
-    </View>;
-
-const Attributes = (props) =>
-    <View>
-        <Card title='OS Attributes'>
-            <Attribute label='OS Tag' value={props.OSTag} />
-            <Attribute label='Site' value={props.site} />
-            <Attribute label='Department' value={props.department} />
-            <Attribute label='Building' value={props.building} />
-            <Attribute label='Floor' value={props.floor} />
-            <Attribute label='Room' value={props.room} />
-        </Card>
-    </View>;
-
 
 export default class PairingScreen extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -109,6 +85,16 @@ export default class PairingScreen extends Component {
             return <ActivityIndicator style={{ flex: 1 }} />
         }
         else {
+            let data = this.state.data;
+            let attributes = [
+                {label: 'OS Tag', value: data.OSTag},
+                {label: 'Site', value: data.site},
+                {label: 'Department', value: data.department},
+                {label: 'Building', value: data.building},
+                {label: 'Floor', value: data.floor},
+                {label: 'Room', value: data.room},
+            ];
+
             let tip;
             switch ( this.state.RFIDStatus ){
             case 'checking':
@@ -121,12 +107,18 @@ export default class PairingScreen extends Component {
                 tip = <Text style={[style.tip, {color: 'red'}]}>RFID reader is not connected, please connect it at first. Or use Camera to scan instead.</Text>;
                 break;
             }
+
             return (
                 <View>
                     {tip}
 
-                    <RFIDTagInput RFIDTag={this.state.data.RFIDTag} />
-                    <Attributes {...this.state.data} />
+                    <Card title='RFID Tag' backgroundColor='white'>
+                        <RFIDTagInput RFIDTag={data.RFIDTag} />
+                    </Card>
+
+                    <Card title='OS Attributes'>
+                        <Attributes items={attributes} />
+                    </Card>
                 </View>);
         }
     }

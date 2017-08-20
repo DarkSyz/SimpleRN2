@@ -6,10 +6,10 @@ export default class ChooserScreen extends Component {
     static navigationOptions = (props) => {
         let params = props.navigation.state.params;
         return {
-        title: params.title,
-        headerRight: params.showDone ? 
-            <Button title='Done' onPress={() => params.onDonePress()} />        
-            : null
+            title: params.title,
+            headerRight: params.showDone ?
+                <Button title='Done' onPress={() => params.onDonePress()} />
+                : null
         }
     };
 
@@ -22,7 +22,7 @@ export default class ChooserScreen extends Component {
         }
     }
     componentDidMount() {
-        this.props.navigation.setParams({onDonePress: this.onDonePress});
+        this.props.navigation.setParams({ onDonePress: this.onDonePress });
         this.props.navigation.state.params.fetch().then((items) => {
             this.fullItems = items;
             this.setState({
@@ -36,18 +36,18 @@ export default class ChooserScreen extends Component {
         let items = v === '' ? this.fullItems : this.fullItems.filter((item) => {
             return item.name.toUpperCase().indexOf(v.toUpperCase()) !== -1;
         })
-        this.setState({ 
+        this.setState({
             search: v,
-            items: items 
+            items: items
         });
     }
-    onDonePress = ()=>{
-        let item = {id:'-1', name:this.state.search}
+    onDonePress = () => {
+        let item = { id: '-1', name: this.state.search }
         let nav = this.props.navigation;
         nav.state.params.callback(item);
-        nav.goBack();        
+        nav.goBack();
     }
-    onItemPress = (item)=>{
+    onItemPress = (item) => {
         let nav = this.props.navigation;
         nav.state.params.callback(item);
         nav.goBack();
@@ -62,16 +62,16 @@ export default class ChooserScreen extends Component {
                     <TextInput placeholder='Search' keyboardType='web-search' underlineColorAndroid='transparent'
                         onChangeText={(v) => this.onChangeText(v)} value={this.state.search}
                         style={{ padding: 8, backgroundColor: 'white' }} />
-                    <FlatList style={{ flex: 1}}
+                    <FlatList style={{ flex: 1 }}
                         data={this.state.items}
                         renderItem={e =>
                             <TouchableOpacity style={{ justifyContent: 'center', height: 32, margin: 4 }}
-                                onPress={()=>this.onItemPress(e.item)}>
+                                onPress={() => this.onItemPress(e.item)}>
                                 <Text>{e.item.name}</Text>
                             </TouchableOpacity>
                         }
-                        ItemSeparatorComponent={()=><View style={{borderColor:'lightgray', borderWidth: 1}}></View>}
-                        keyExtractor={(item, index)=>index }
+                        ItemSeparatorComponent={() => <View style={{ borderColor: 'lightgray', borderWidth: 1 }}></View>}
+                        keyExtractor={(item, index) => index}
                     />
                 </View>
             );

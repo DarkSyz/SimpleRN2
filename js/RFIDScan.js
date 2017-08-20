@@ -11,23 +11,11 @@ import {
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import style from './style';
-import { CardComponent as Card } from './common';
+import { CardComponent as Card, ChangableAttributesComponent as ChangableAttributes } from './common';
 import Service from './services';
 
-const ListItem = (props) =>
-    <TouchableOpacity onPress={props.onPress}>
-        <View style={style.cardRow}>
-            <Text>{props.label}</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text>{props.value}</Text>
-                <Image style={style.smallIcon} source={require('../images/icons8-Forward-48.png')} />
-            </View>
-        </View>
-    </TouchableOpacity>
-
 const CircleButton = (props) =>
-    <TouchableOpacity style={style.circleButton} underlayColor='#49a9ee'
-        onPress={() => props.onPress()}>
+    <TouchableOpacity style={style.circleButton} underlayColor='#49a9ee' onPress={() => props.onPress()}>
         <Text style={{ alignSelf: 'center' }}>{props.title}</Text>
     </TouchableOpacity>
 
@@ -97,26 +85,25 @@ export default class RFIDScanScreen extends Component {
         Alert.alert('Start')
     }
     render() {
+        let data = this.state;
+        let items = [
+            { label: 'Site', value: data.site.name, onPress: () => this.selectSite(this.state.site) },
+            { label: 'Department', value: data.department.name, onPress: () => this.selectDepartment(this.state.department) },
+            { label: 'Building', value: data.building.name, onPress: () => this.selectBuilding(this.state.building) },
+            { label: 'Floor', value: data.floor.name, onPress: () => this.selectFloor(this.state.floor) },
+            { label: 'Room', value: data.room.name, onPress: () => this.selectRoom(this.state.room) },
+        ];
+
         return (
             <View>
                 <Text style={style.tip}>Please set the scanning environment and start re-inventory</Text>
 
                 <Card title='Environment'>
-                    <ListItem label='Site' value={this.state.site.name}
-                        onPress={() => this.selectSite(this.state.site)} />
-                    <ListItem label='Department' value={this.state.department.name}
-                        onPress={() => this.selectDepartment(this.state.site)} />
-                    <ListItem label='Building' value={this.state.building.name}
-                        onPress={() => this.selectBuilding(this.state.building)} />
-                    <ListItem label='Floor' value={this.state.floor.name}
-                        onPress={() => this.selectFloor(this.state.site)} />
-                    <ListItem label='Room' value={this.state.room.name}
-                        onPress={() => this.selectRoom(this.state.site)} />
+                    <ChangableAttributes items={items} />
                 </Card>
 
                 <View style={style.circleButtonContainer}>
-                    <CircleButton title='Start'
-                        onPress={() => this.start()} />
+                    <CircleButton title='Start' onPress={() => this.start()} />
                 </View>
             </View>);
     }
