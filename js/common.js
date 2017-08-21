@@ -9,7 +9,10 @@ export const TextInputComponent = (props)=>
 
 export const CardComponent = (props) =>
     <View style={style.card}>
-        {props.title && <Text style={style.cardLabel}>{props.title}</Text>}
+        { typeof props.title === 'string' ?
+            <Text style={style.cardLabel}>{props.title}</Text>
+            : { ...props.title }
+        }
         <View style={[style.cardContent, { backgroundColor: props.backgroundColor }]}>
             {props.children}
         </View>

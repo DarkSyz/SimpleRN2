@@ -16,31 +16,21 @@ export default class ChooserScreen extends Component {
 
     constructor(props) {
         super(props);
-        this.fullItems = [];
+        this.items=[];
         this.state = {
             loading: true,
-            items: []
+            search: ''
         }
     }
     componentDidMount() {
+
         this.props.navigation.setParams({ onDonePress: this.onDonePress });
         this.props.navigation.state.params.fetch().then((items) => {
-            this.fullItems = items;
+            this.items = items;
             this.setState({
-                loading: false,
-                search: '',
-                items: items
+                loading: false
             })
         })
-    }
-    onChangeText(v) {
-        let items = v === '' ? this.fullItems : this.fullItems.filter((item) => {
-            return item.name.toUpperCase().indexOf(v.toUpperCase()) !== -1;
-        })
-        this.setState({
-            search: v,
-            items: items
-        });
     }
     onDonePress = () => {
         let item = { id: '-1', name: this.state.search }
@@ -56,15 +46,18 @@ export default class ChooserScreen extends Component {
     render() {
         if (this.state.loading) {
             return <ActivityIndicator style={{ flex: 1 }} />
-        }
-        else {
+        } else {
+            let items = this.items;
+            if ( this.state.search !== '' ) {
+                items = items.filter((item) => (item.name.toUpperCase().indexOf(this.state.search.toUpperCase()) !== -1));
+            }
             return (
                 <View style={{ flex: 1 }}>
                     <TextInputComponent placeholder='Search' keyboardType='web-search'
-                        onChangeText={(v) => this.onChangeText(v)} value={this.state.search}
+                        onChangeText={(v) => this.setState({ search: v })} value={this.state.search}
                         style={{ padding: 8, backgroundColor: 'white' }} />
                     <FlatList style={{ flex: 1 }}
-                        data={this.state.items}
+                        data={items}
                         renderItem={e =>
                             <TouchableOpacity style={{ justifyContent: 'center', height: 32, margin: 4 }}
                                 onPress={() => this.onItemPress(e.item)}>
