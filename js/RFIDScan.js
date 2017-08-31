@@ -56,7 +56,7 @@ export default class RFIDScanScreen extends Component {
         this.props.navigation.navigate('Chooser',
             {
                 title: 'Buildings',
-                showDone: false,
+                showDone: true,
                 fetch: Service.fetchBuildings,
                 callback: v => this.setState({ building: v })
             })
@@ -65,7 +65,7 @@ export default class RFIDScanScreen extends Component {
         this.props.navigation.navigate('Chooser',
             {
                 title: 'Floor',
-                showDone: false,
+                showDone: true,
                 fetch: Service.fetchFloors,
                 callback: v => this.setState({ floor: v })
             })
@@ -74,7 +74,7 @@ export default class RFIDScanScreen extends Component {
         this.props.navigation.navigate('Chooser',
             {
                 title: 'Room',
-                showDone: false,
+                showDone: true,
                 fetch: Service.fetchRooms,
                 callback: v => this.setState({ room: v })
             })
