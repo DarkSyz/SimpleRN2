@@ -29,8 +29,8 @@ export default class FavoritesScreen extends Component {
                     <View key={e.item.id} flexDirection='row' alignItems='center' style={{ height: 40 }}>
                     <Image style={{ height: 24, width: 24 }} source={require('../images/ic_launcher.png')} />
                     <View style={{ padding: 4, flex: 1 }} flexDirection='column'>
-                        <Text numberOfLines={1} style={{ fontSize: 16 }}>{e.item.modelName}</Text>
-                        <Text numberOfLines={1} style={{ fontSize: 10 }}>{e.item.vendorName}</Text>
+                        <Text numberOfLines={1} style={{ fontSize: 16 }}>{e.item.OSTag}</Text>
+                        <Text numberOfLines={1} style={{ fontSize: 10 }}>{e.item.vendor} - {e.item.model}</Text>
                     </View>
                 </View>
                     

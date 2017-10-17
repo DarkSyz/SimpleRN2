@@ -7,4 +7,6 @@ export default Entries = (props)=>
 
         <Button onPress={()=>props.navigation.navigate('Pairing')} title='Pairing'/>
         <Button onPress={()=>props.navigation.navigate('Scan')} title='RDIFScan'/>
+
+        <Button onPress={()=>props.navigation.navigate('IndentList')} title='Indent List'/>
     </View>;

@@ -20,6 +20,7 @@ import ChatScreen from './chat';
 import SettingsScreen from './settings';
 import PairingScreen from './RFIDPairing';
 import RFIDScanScreen from './RFIDScan';
+import IndentListScreen from './indentList';
 import ChooserScreen from './chooser';
 import store from './store';
 
@@ -66,7 +67,10 @@ export default App = StackNavigator({
     Scan: {
         screen: RFIDScanScreen,
     }, 
-    Chooser : {
+    IndentList: {
+      screen: IndentListScreen,
+  }, 
+  Chooser : {
         screen: ChooserScreen,
     },
     Main: {
